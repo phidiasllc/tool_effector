@@ -22,26 +22,35 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 include<simple_delta_tool_effector.scad>
 layer_height = 0.33;
 
-render_part(part_to_render = 99);
+render_part(part_to_render = 1);
 
 module render_part(part_to_render) {
+	// stage effector is for mounting a stage or platen to
 	if (part_to_render == 0) stage_effector();
 
-	if (part_to_render == 1) small_tool_effector();
+	// small_tool_effector
+	if (part_to_render == 1) tool_effector(large=true);
 
-	if (part_to_render == 2) mount_stir_rod();
+	// circular tool holder is for tools with a circular cross section
+	// tools with diameter larger than 25mm will need to be fit on the large tool effector
+	if (part_to_render == 2) 	circular_tool_holder(
+			h_effector_tool_mount = 7,
+			bearing_cage = true,
+			d1_circular_tool = 14,
+			clamping_screw = 1,
+			nut_pocket = true,
+			d_effector_tool_magnet_mount = d_small_effector_tool_magnet_mount
+		);
 
 	if (part_to_render == 3)
-	sprung_mount(
+	sprung_tool_holder(
 		bearing_cage = true,
 		render_tool_mount = true,
-		render_holder = true,
+		render_holder = false,
 		d_max_tool = 14.5,
 		d_springs = 5,
 		h_springs = 7);
-
-	if (part_to_render == 4) large_tool_effector();
-
+		
 	if (part_to_render == 5) 96well_plate_holder();
 
 	if (part_to_render == 6) microscope_holder();
@@ -56,7 +65,9 @@ module render_part(part_to_render) {
 	if (part_to_render == 8)
 		hotend_tool(
 			quickrelease = true,
-			dalekify = false
+			dalekify = false,
+			vented = false,
+			headless = true
 		);
 
 	if (part_to_render == 99) sandbox();
@@ -64,5 +75,5 @@ module render_part(part_to_render) {
 
 // a place to play
 module sandbox() {
-
+bearing_relief(d_effector_tool_magnet_mount = d_small_effector_tool_magnet_mount);
 }
